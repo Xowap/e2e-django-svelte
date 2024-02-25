@@ -1,0 +1,15 @@
+# Dev
+ruff
+bpython
+
+# Test
+pytest
+pytest-django
+pytest-playwright
+pytest-env
+strip_ansi
+
+# Project
+django
+djangorestframework
+httpx

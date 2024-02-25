@@ -1,0 +1,59 @@
+name: "Test API"
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    test:
+        name: "Test"
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.11"
+
+            - name: Setup Node
+              uses: oven-sh/setup-bun@v1
+
+            - name: Install uv
+              uses: yezz123/setup-uv@v1
+
+            - name: Install Python dependencies
+              run: make sync
+              working-directory: ./api
+
+            - name: Install Node dependencies
+              run: bun install
+              working-directory: ./front
+
+            - name: Install Playwright
+              run: make playwright
+              working-directory: ./api
+
+            - name: Run tests
+              run:
+                  .venv/bin/python -m pytest --junitxml=/tmp/test-results.xml
+                  --tracing=on --video=on --screenshot=on
+              working-directory: ./api
+
+            - name: Publish test report
+              uses: mikepenz/action-junit-report@v4
+              if: always()
+              with:
+                  report_paths: "/tmp/test-results.xml"
+                  check_name: "API Pytest Report"
+
+            - name: Keep Playwright artifacts
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: playwright-traces
+                  path: api/test-results/

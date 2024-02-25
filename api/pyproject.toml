@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "e2e_django.settings"
+env = [
+    "DJANGO_ALLOW_ASYNC_UNSAFE=true",
+]

@@ -1,0 +1,7 @@
+.idea/
+.vscode/
+.env
+*.un~
+*.swp
+*.pyc
+*.sqlite3
